@@ -15,12 +15,11 @@ class BarbersSpider(scrapy.Spider):
 
     def parse_category(self, response):
         products = response.css("li.product-item")
-        category = response.css("h1.page-title::text").get(default="").strip()
 
         for product in products:
 
             yield {
-                "category": category,
+                "category": response.css("h1.page-title::text").get(default="").strip(),
                 "title": product.css("h2.product-name a::text").get(),
                 "url": product.css("h2.product-name a::attr(href)").get(),
                 "price": product.css(
