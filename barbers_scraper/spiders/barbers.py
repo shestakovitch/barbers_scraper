@@ -18,24 +18,14 @@ class BarbersSpider(scrapy.Spider):
         category = response.css("h1.page-title::text").get(default="").strip()
 
         for product in products:
-            paragraphs = product.css('div.excerpt p::text').getall()
-
-            price = product.css(
-                "div.price-wrap span.price span.woocommerce-Price-amount bdi::text"
-            ).get()
-            currency = product.css(
-                "div.price-wrap span.price span.woocommerce-Price-currencySymbol::text"
-            ).get()
-
-            full_price = f"{price.replace('\xa0', '') if price else ''} {currency or ''}".strip()
 
             yield {
                 "category": category,
                 "title": product.css("h2.product-name a::text").get(),
                 "url": product.css("h2.product-name a::attr(href)").get(),
-                # "description": paragraphs[0] if len(paragraphs) > 0 else '',
-                # "ingredients": paragraphs[1].replace("Sadržaj: ", "") if len(paragraphs) > 1 else '',
-                "price": full_price,
+                "price": product.css(
+                "div.price-wrap span.price span.woocommerce-Price-amount bdi::text"
+            ).get()
             }
 
         next_page = response.css("div.infload-controls a::attr(href)").get()

@@ -10,4 +10,9 @@ from itemadapter import ItemAdapter
 
 class BarbersScraperPipeline:
     def process_item(self, item, spider):
+        adapter = ItemAdapter(item)
+
+        price_string = adapter.get("price")
+        adapter["price"] = float(price_string.replace(",", "").replace("\xa0", ""))
+
         return item
