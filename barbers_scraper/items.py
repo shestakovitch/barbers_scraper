@@ -6,7 +6,9 @@
 import scrapy
 
 
-class BarbersScraperItem(scrapy.Item):
+class BarbersItem(scrapy.Item):
     # define the fields for your item here like:
-    # name = scrapy.Field()
-    pass
+    category = scrapy.Field()
+    title = scrapy.Field()
+    url = scrapy.Field()
+    price = scrapy.Field()

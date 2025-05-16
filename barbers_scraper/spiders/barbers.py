@@ -1,4 +1,5 @@
 import scrapy
+from barbers_scraper.items import BarbersItem
 
 
 class BarbersSpider(scrapy.Spider):
@@ -15,17 +16,19 @@ class BarbersSpider(scrapy.Spider):
 
     def parse_category(self, response):
         products = response.css("li.product-item")
+        barbers_item = BarbersItem()
+
 
         for product in products:
 
-            yield {
-                "category": response.css("h1.page-title::text").get(default="").strip(),
-                "title": product.css("h2.product-name a::text").get(),
-                "url": product.css("h2.product-name a::attr(href)").get(),
-                "price": product.css(
+            barbers_item["category"] = response.css("h1.page-title::text").get(default="").strip()
+            barbers_item["title"] = product.css("h2.product-name a::text").get()
+            barbers_item["url"] = product.css("h2.product-name a::attr(href)").get()
+            barbers_item["price"] = product.css(
                 "div.price-wrap span.price span.woocommerce-Price-amount bdi::text"
             ).get()
-            }
+
+            yield barbers_item
 
         next_page = response.css("div.infload-controls a::attr(href)").get()
         if next_page:
